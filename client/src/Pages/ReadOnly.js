@@ -3,22 +3,22 @@ import Button from '@mui/material/Button';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 
-const ReadOnly = ({ products, handleEditClick, deleteData }) => {
+const ReadOnly = ({ product, handleEditClick, deleteData }) => {
     return (
         <TableRow
-            key={products.productId}
+            key={product.name}
             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             align="left"
             >
-            <TableCell>{products.productName}</TableCell>
-            <TableCell>{products.productOwnerName}</TableCell>
-            <TableCell>{products.developers}</TableCell>
-            <TableCell>{products.scrumMasterName}</TableCell>
-            <TableCell>{products.startDate}</TableCell>
-            <TableCell>{products.methodology}</TableCell>
+            <TableCell>{product.productName}</TableCell>
+            <TableCell>{product.productOwnerName}</TableCell>
+            <TableCell>{product.developers}</TableCell>
+            <TableCell>{product.scrumMasterName}</TableCell>
+            <TableCell>{product.startDate}</TableCell>
+            <TableCell>{product.methodology}</TableCell>
             <TableCell>
-                <Button type="edit" onClick={(e) => handleEditClick(e, products)} variant="contained" color="success">Edit</Button>
-                <Button type="delete" onClick={() => deleteData(products.productId)} variant="contained" color="error">Delete</Button>
+                <Button type="edit" onClick={(e) => handleEditClick(e, product)} variant="contained" color="success">Edit</Button>
+                <Button type="delete" onClick={() => deleteData(product.productId)} variant="contained" color="error">Delete</Button>
             </TableCell>
         </TableRow>
     )

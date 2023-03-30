@@ -59,11 +59,19 @@ const ProductForm = () => {
         // e.preventDefault()
         setProductId(productId => productId + 1)
 
-        const productData = { productId, productName, productOwnerName, developers, scrumMasterName, startDate, methodology }
-        setProductData(productData)
+        const newData = { 
+            productId: productId, 
+            productName: productName, 
+            productOwnerName: productOwnerName, 
+            developers: developers, 
+            scrumMasterName: scrumMasterName, 
+            startDate: startDate, 
+            methodology: methodology }
+
+        setProductData([...productData, newData])
         try {
             await axios.post("http://localhost:8000/products", {
-                productData
+                newData
             })
         } catch (err) {
             console.log(err)
@@ -199,10 +207,10 @@ const ProductForm = () => {
                         onChange={(e) => { setScrumMasterName(e.target.value) }}
                     />
                     <TextField
-                        label="Date"
+                        label="YYYY/MM/DD"
                         fullWidth
                         sx={{ m: 0.5 }}
-                        {...register("startDate", { required: "Start Date is required." })}
+                        {...register("startDate", { required: "Numbers only for Start Date" })}
                         error={Boolean(errors.startDate)}
                         helperText={errors.startDate?.message}
                         onChange={(e) => { setStartDate(e.target.value) }}
@@ -231,7 +239,8 @@ const ProductForm = () => {
                         <MenuItem value="Agile">Agile</MenuItem>
                         <MenuItem value="Waterfall">Waterfall</MenuItem>
                     </Select>
-                    <Button type="submit" variant="contained" color="primary" sx={{ m: 0.5, marginLeft: 60 }}>Submit</Button>
+                    {/* <Button type="submit" variant="contained" color="primary" sx={{ m: 0.5, marginLeft: 60 }}>Submit</Button> */}
+                    <Button type="submit" variant="contained" color="primary" sx={{ m: 0.5 }}>Submit</Button>
                 </form>
             </CustomizedDialog>
             <div>
@@ -261,7 +270,7 @@ const ProductForm = () => {
                                             />
                                         ) : (
                                             <ReadOnly
-                                                productId={productId}
+                                                product={product}
                                                 handleEditClick={handleEditClick}
                                                 deleteData={deleteData}
                                             />
