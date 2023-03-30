@@ -19,6 +19,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Editable from '../Pages/Editable';
 import ReadOnly from '../Pages/ReadOnly';
+import { useForm } from "react-hook-form";
 
 const ProductForm = () => {
     const [productId, setProductId] = useState(1)
@@ -39,6 +40,8 @@ const ProductForm = () => {
     const [productData, setProductData] = useState([])
     // console.log(productData)
 
+    const { register, handleSubmit, formState: { errors } } = useForm()
+
     // we only need these 4 values for edits
     const [editTableData, setEditTableData] = useState({
         productName: "",
@@ -53,7 +56,7 @@ const ProductForm = () => {
     const [editID, setEditID] = useState(null)
 
     const submitData = async (e) => {
-        e.preventDefault()
+        // e.preventDefault()
         setProductId(productId => productId + 1)
 
         const productData = { productId, productName, productOwnerName, developers, scrumMasterName, startDate, methodology }
@@ -127,7 +130,7 @@ const ProductForm = () => {
         e.preventDefault();
         setEditID(product.id);
 
-        const formValues = {
+        const editedProduct = {
             productName: product.productName,
             productOwnerName: product.productOwnerName,
             developers: product.developers,
@@ -135,7 +138,7 @@ const ProductForm = () => {
             startDate: product.startDate,
             methodology: product.methodology
         };
-        setEditTableData(formValues);
+        setEditTableData(editedProduct);
     };
 
     // cancels the edit
@@ -154,50 +157,54 @@ const ProductForm = () => {
         })
     }
 
-
     return (
         <>
-
             <CustomizedDialog>
-                <form onSubmit={submitData}>
+                <form onSubmit={handleSubmit(submitData)}>
                     <TextField
-                        required
                         label="Product Name"
-                        value={productName}
                         fullWidth
                         sx={{ m: 0.5 }}
+                        {...register("productName", { required: "Product Name is required." })}
+                        error={Boolean(errors.productName)}
+                        helperText={errors.productName?.message}
                         onChange={(e) => { setProductName(e.target.value) }}
                     />
                     <TextField
-                        required
                         label="Product Owner Name"
-                        value={productOwnerName}
                         fullWidth
                         sx={{ m: 0.5 }}
+                        name="productOwnerName"
+                        {...register("productOwnerName", { required: "Product Owner Name is required." })}
+                        error={Boolean(errors.productOwnerName)}
+                        helperText={errors.productOwnerName?.message}
                         onChange={(e) => { setProductOwnerName(e.target.value) }}
                     />
                     <TextField
-                        required
                         label="Developers"
-                        value={developers}
                         fullWidth
                         sx={{ m: 0.5 }}
+                        {...register("developers", { required: "Developer Name is required." })}
+                        error={Boolean(errors.developers)}
+                        helperText={errors.developers?.message}
                         onChange={(e) => { setDevelopers(e.target.value) }}
                     />
                     <TextField
-                        required
                         label="Scrum Master Name"
-                        value={scrumMasterName}
                         fullWidth
                         sx={{ m: 0.5 }}
+                        {...register("scrumMasterName", { required: "Scrum Master Name is required." })}
+                        error={Boolean(errors.scrumMasterName)}
+                        helperText={errors.scrumMasterName?.message}
                         onChange={(e) => { setScrumMasterName(e.target.value) }}
                     />
                     <TextField
-                        required
                         label="Date"
-                        value={startDate}
                         fullWidth
                         sx={{ m: 0.5 }}
+                        {...register("startDate", { required: "Start Date is required." })}
+                        error={Boolean(errors.startDate)}
+                        helperText={errors.startDate?.message}
                         onChange={(e) => { setStartDate(e.target.value) }}
                     />
                     {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -212,16 +219,19 @@ const ProductForm = () => {
                     </LocalizationProvider> */}
                     <InputLabel>Methodology</InputLabel>
                     <Select
-                        value={methodology}
                         label="Methodology"
                         fullWidth
                         sx={{ m: 0.5 }}
+                        defaultValue=""
+                        {...register("methodology", { required: "Methodology is required."  })}
+                        error={Boolean(errors.methodology)}
+                        helperText={errors.methodology?.message}
                         onChange={(e) => { setMethodology(e.target.value) }}
                     >
                         <MenuItem value="Agile">Agile</MenuItem>
                         <MenuItem value="Waterfall">Waterfall</MenuItem>
                     </Select>
-                    <Button type="submit" variant="contained" color="primary" sx={{ m: 0.5 }}>Submit</Button>
+                    <Button type="submit" variant="contained" color="primary" sx={{ m: 0.5, marginLeft: 60 }}>Submit</Button>
                 </form>
             </CustomizedDialog>
             <div>
@@ -258,9 +268,11 @@ const ProductForm = () => {
                                         )}
                                 </Fragment>
                             ))}
-                            {/* <TableCell>{productData.productName}</TableCell>
-                        <TableCell>{productData.productOwnerName}</TableCell> */}
-                            {/* {productData.map((products) => {
+
+{/* 
+                            <TableCell>{productData.productName}</TableCell>
+                        <TableCell>{productData.productOwnerName}</TableCell>
+                            {productData.map((products) => {
                             return (
                                 <TableRow>
                                 <TableCell>{products.productId}</TableCell>
@@ -272,10 +284,7 @@ const ProductForm = () => {
                                 <TableCell>{products.methodology}</TableCell>
                             </TableRow>
                             )
-                            
-                        })} */}
-
-                            {/*                       
+                        })}            
                                 <TableCell>{productData.productId}</TableCell>
                                 <TableCell>{productData.productName}</TableCell>
                                 <TableCell>{productData.productOwnerName}</TableCell>
