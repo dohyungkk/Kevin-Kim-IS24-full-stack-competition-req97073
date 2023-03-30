@@ -8,7 +8,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import CustomizedDialogs from './dialog';
+import CustomizedDialog from './Dialog';
 import axios from 'axios';
 
 const ProductForm = () => {
@@ -41,7 +41,7 @@ const ProductForm = () => {
                 productData
             })
         } catch (err) {
-            console.log(err.message)
+            console.log(err)
         }
         
         // fetch("http://localhost:8000/products", {
@@ -52,19 +52,19 @@ const ProductForm = () => {
         //     alert("Saved successfully")
         //     navigate('/')
         // }).catch((err) => {
-        //     console.log(err.message)
+        //     console.log(err)
         // })
 
         // setProductData({ productId, productName, productOwnerName, developers, scrumMasterName, startDate, methodology })
         // setProductData(productData)
         // JSON.stringify(productData)
-        // console.log(productData)
+        console.log(productData)
     }
 
     return (
         <>
 
-            <CustomizedDialogs>
+            <CustomizedDialog>
                 <form onSubmit={submitData}>
                     <TextField
                         required
@@ -130,7 +130,7 @@ const ProductForm = () => {
                     </Select>
                     <Button type="submit" variant="contained" color="primary" sx={{ m: 0.5 }}>Submit</Button>
                 </form>
-            </CustomizedDialogs>
+            </CustomizedDialog>
         </>
     )
 }

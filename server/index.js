@@ -7,8 +7,15 @@ const app = express()
 const host = 'http://localhost'
 const port = 8000
 
-// app.use(bodyParser.json())
-// app.use(cors)
+app.use(bodyParser.json())
+const corsOptions ={
+    origin:'*', 
+    credentials:true,         
+    optionSuccessStatus:200,
+}
+app.use(cors(corsOptions))
+
+app.use("/", productRoutes)
 
 app.get("/", (req, res) => res.send("Hello from express"))
 app.all("*", (req, res) => res.send("That route does not exist"))
