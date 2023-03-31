@@ -1,12 +1,10 @@
 import React from 'react'
-import ProductForm from './components/ProductForm'
-import ProductInformation from './components/ProductInformation';
+import ProductPage from './components/ProductPage';
 
 const App = () => {
   return (
     <div className="App">
-      <ProductForm />
-      {/* <ProductInformation /> */}
+      <ProductPage />
     </div>
   );
 }
