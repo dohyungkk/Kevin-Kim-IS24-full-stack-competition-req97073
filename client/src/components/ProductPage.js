@@ -135,39 +135,44 @@ const ProductPage = () => {
                     : (<></>)
             }
             <div>
-                <Button onClick={handleOpenProductDialog} variant="contained" color="primary">
+                <Button 
+                    onClick={handleOpenProductDialog} 
+                    variant="contained" 
+                    color="primary" 
+                    sx={{ m: 0.5 }}>
                     + Add Product
                 </Button>
                 <ProductDialog
                     open={openAddProductDialog}
                     handleClose={handleCloseProductDialog}
-
                     /* Updates Table once values are submitted in Dialog */
                     handleAddProductData={handleAddProductData}
                     handleUpdateProductData={handleUpdateProduct}
                     handleMessageFromDialog={handleMessageFromDialog}
                     selectedProduct={selectedProduct}
                 />
-            </div>
-            <div>
-                <TextField
-                    label="Search Scrum Master"
-                    value={queryScrumMasterName}
-                    onChange={(e) => setQueryScrumMasterName(e.target.value)}
-                />
-                <TextField
-                    label="Search Developer"
-                    value={queryDeveloperName}
-                    onChange={(e) => setQueryDeveloperName(e.target.value)}
-                />
                 <Button
                     type="submit"
                     onClick={() => searchProducts()}
                     variant="contained"
                     color="success"
+                    sx={{ m: 0.5, float: "right" }}
+                    style={{ marginBottom: "auto" }}
                 >
                     Search
                 </Button>
+                <TextField
+                    label="Search Developer"
+                    value={queryDeveloperName}
+                    sx={{ m: 0.5, float: "right" }}
+                    onChange={(e) => setQueryDeveloperName(e.target.value)}
+                />
+                <TextField
+                    label="Search Scrum Master"
+                    value={queryScrumMasterName}
+                    sx={{ m: 0.5, float: "right" }}
+                    onChange={(e) => setQueryScrumMasterName(e.target.value)}
+                />
             </div>
             <div>
                 {requestMessage}

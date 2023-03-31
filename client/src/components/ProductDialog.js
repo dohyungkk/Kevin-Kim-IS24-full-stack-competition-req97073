@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -9,7 +10,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import axios from 'axios';
-import { useForm } from "react-hook-form";
 
 const ProductDialog = ({
     open,
@@ -34,8 +34,11 @@ const ProductDialog = ({
             key: index,
         }));
 
-    const { register, handleSubmit, formState: { errors } } = useForm()
-    const callError = (data) => console.log(data)
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const handleSubmit = () => {
+        setIsSubmitted(true);
+        // Other form submission logic goes here
+    };
 
     useEffect(() => {
         if (selectedProduct) {
@@ -105,24 +108,22 @@ const ProductDialog = ({
             <DialogTitle>{selectedProduct ? 'Update' : 'Add'} Product</DialogTitle>
             <DialogContent>
                 <TextField
-                    required
                     label="Product Name"
                     fullWidth
                     sx={{ m: 0.5 }}
                     value={productName}
-                    {...register("productName", { required: "Product Name is required." })}
-                    error={Boolean(errors.productName)}
-                    helperText={errors.productName?.message}
                     onChange={(e) => setProductName(e.target.value)}
+                    error={isSubmitted && productName === ''}
+                    helperText={isSubmitted && productName === '' ? 'Product Name cannot be empty' : ''}
                 />
                 <TextField
-                    required
                     label="Product Owner Name"
                     fullWidth
                     sx={{ m: 0.5 }}
                     value={productOwnerName}
-                    {...register("productOwnerName", { required: "Product Owner Name is required." })}
                     onChange={(e) => setProductOwnerName(e.target.value)}
+                    error={isSubmitted && productOwnerName === ''}
+                    helperText={isSubmitted && productOwnerName === '' ? 'Product Owner Name cannot be empty' : ''}
                 />
                 {
                     developerTextFields.map(({ value, key }) => (
@@ -133,6 +134,8 @@ const ProductDialog = ({
                             sx={{ m: 0.5 }}
                             value={value}
                             onChange={(e) => handleDeveloperNameChange(e, key)}
+                            error={isSubmitted && developerTextFields[0].value === ''}
+                            helperText={isSubmitted && developerTextFields[0].value === '' ? 'Developer Name 1 cannot be empty' : ''}
                         />
                     ))
                 }
@@ -141,16 +144,18 @@ const ProductDialog = ({
                     fullWidth
                     sx={{ m: 0.5 }}
                     value={scrumMasterName}
-                    {...register("scrumMasterName", { required: "Scrum Master Name is required." })}
                     onChange={(e) => setScrumMasterName(e.target.value)}
+                    error={isSubmitted && scrumMasterName === ''}
+                    helperText={isSubmitted && scrumMasterName === '' ? 'Scrum Master Name cannot be empty' : ''}
                 />
                 <TextField
                     label="YYYY-MM-DD"
                     fullWidth
                     sx={{ m: 0.5 }}
                     value={startDate}
-                    {...register("startDate", { required: "Numbers only for Start Date" })}
                     onChange={(e) => setStartDate(e.target.value)}
+                    error={isSubmitted && startDate === ''}
+                    helperText={isSubmitted && startDate === '' ? 'Start Date cannot be empty' : ''}
                 />
                 <InputLabel>Methodology</InputLabel>
                 <Select
@@ -158,18 +163,20 @@ const ProductDialog = ({
                     fullWidth
                     sx={{ m: 0.5 }}
                     value={methodology}
-                    {...register("methodology", { required: "Methodology is required." })}
                     onChange={(e) => setMethodology(e.target.value)}
+                    error={isSubmitted && methodology === ''}
+                    helperText={isSubmitted && methodology === '' ? 'Methodology cannot be empty' : ''}
                 >
                     <MenuItem value="Agile">Agile</MenuItem>
                     <MenuItem value="Waterfall">Waterfall</MenuItem>
                 </Select>
+                
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
                 {
-                    selectedProduct ? (<Button onClick={handleUpdateProduct}>Update</Button>)
-                        : (<Button onClick={handleAddProduct}>Add</Button>)
+                    selectedProduct ? (<Button onClick={handleUpdateProduct&&handleSubmit}>Update</Button>)
+                        : (<Button onClick={handleAddProduct&&handleSubmit}>Add</Button>)
                 }
             </DialogActions>
         </Dialog>
