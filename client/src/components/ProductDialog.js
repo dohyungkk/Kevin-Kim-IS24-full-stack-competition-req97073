@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -26,6 +25,7 @@ const ProductDialog = ({
     const [developers, setDevelopers] = useState(['', '', '', '', '']);
     const [methodology, setMethodology] = useState('')
 
+    /* Setting developers up to 5, and fills developers in order */
     const MAX_DEVELOPERS = 5;
     const developerTextFields = Array(MAX_DEVELOPERS)
         .fill("")
@@ -34,12 +34,10 @@ const ProductDialog = ({
             key: index,
         }));
 
-    const [isSubmitted, setIsSubmitted] = useState(false);
-    const handleSubmit = () => {
-        setIsSubmitted(true);
-        // Other form submission logic goes here
-    };
+    /* Checking if TextField is filled */
+    const [isFilled, setIsFilled] = useState(false);
 
+    /* Fetching all stored values */
     useEffect(() => {
         if (selectedProduct) {
             setProductName(selectedProduct.productName);
@@ -51,6 +49,7 @@ const ProductDialog = ({
         }
     }, [selectedProduct]);
 
+    /* Clearing fields when added or updated */
     const clearFields = () => {
         setProductName('')
         setProductOwnerName('')
@@ -60,12 +59,14 @@ const ProductDialog = ({
         setMethodology('')
     }
 
+    /* Checking which developer (from 1 to 5) to handle */
     const handleDeveloperNameChange = (e, index) => {
         const newDevelopers = [...developers];
         newDevelopers[index] = e.target.value;
         setDevelopers(newDevelopers);
     };
 
+    /* Adding product and posting it on backend using axios */
     const handleAddProduct = () => {
         const data = buildProductPayload()
         axios.post('http://localhost:8000/products', data)
@@ -77,8 +78,10 @@ const ProductDialog = ({
             }).catch((error) => {
                 console.log(error)
             })
+        setIsFilled(true);
     };
 
+    /* Updating product and patching it on backend using axios */
     const handleUpdateProduct = () => {
         const data = buildProductPayload()
         axios.patch(`http://localhost:8000/products/${selectedProduct.productId}`, data)
@@ -90,8 +93,10 @@ const ProductDialog = ({
             }).catch((error) => {
                 console.log(error)
             })
+        setIsFilled(true);
     };
 
+    /* Storing each value */
     const buildProductPayload = () => {
         return {
             "productName": productName,
@@ -104,79 +109,94 @@ const ProductDialog = ({
     }
 
     return (
+        /* Pop up to add or edit each data */
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>{selectedProduct ? 'Update' : 'Add'} Product</DialogTitle>
             <DialogContent>
                 <TextField
+                    required
                     label="Product Name"
                     fullWidth
                     sx={{ m: 0.5 }}
                     value={productName}
                     onChange={(e) => setProductName(e.target.value)}
-                    error={isSubmitted && productName === ''}
-                    helperText={isSubmitted && productName === '' ? 'Product Name cannot be empty' : ''}
+                    error={isFilled && productName === ''}
+                    helperText={isFilled && productName === '' ? 'Product Name cannot be empty' : ''}
                 />
                 <TextField
+                    required
                     label="Product Owner Name"
                     fullWidth
                     sx={{ m: 0.5 }}
                     value={productOwnerName}
                     onChange={(e) => setProductOwnerName(e.target.value)}
-                    error={isSubmitted && productOwnerName === ''}
-                    helperText={isSubmitted && productOwnerName === '' ? 'Product Owner Name cannot be empty' : ''}
+                    error={isFilled && productOwnerName === ''}
+                    helperText={isFilled && productOwnerName === '' ? 'Product Owner Name cannot be empty' : ''}
                 />
-                {
-                    developerTextFields.map(({ value, key }) => (
-                        <TextField
-                            key={key}
-                            label={`Developer ${key + 1}`}
-                            fullWidth
-                            sx={{ m: 0.5 }}
-                            value={value}
-                            onChange={(e) => handleDeveloperNameChange(e, key)}
-                            error={isSubmitted && developerTextFields[0].value === ''}
-                            helperText={isSubmitted && developerTextFields[0].value === '' ? 'Developer Name 1 cannot be empty' : ''}
-                        />
-                    ))
-                }
                 <TextField
+                    required
+                    key={developerTextFields[0].key}
+                    label="Developer 1"
+                    fullWidth
+                    sx={{ m: 0.5 }}
+                    value={developerTextFields[0].value}
+                    onChange={(e) => handleDeveloperNameChange(e, 0)}
+                    error={isFilled && developerTextFields[0].value === ""}
+                    helperText={isFilled && developerTextFields[0].value === "" ? 'Developer Name 1 cannot be empty' : ''}
+                />
+                {/* Taking out Developer 1 field to set restriction on just Developer 1, and using slice(1) to map Developer 2~5 fields */}
+                {developerTextFields.slice(1).map(({ value, key }) => (
+                    <TextField
+                        required
+                        key={key}
+                        label={`Developer ${key + 1}`}
+                        fullWidth
+                        sx={{ m: 0.5 }}
+                        value={value}
+                        onChange={(e) => handleDeveloperNameChange(e, key)}
+                    />
+                ))}
+                <TextField
+                    required
                     label="Scrum Master Name"
                     fullWidth
                     sx={{ m: 0.5 }}
                     value={scrumMasterName}
                     onChange={(e) => setScrumMasterName(e.target.value)}
-                    error={isSubmitted && scrumMasterName === ''}
-                    helperText={isSubmitted && scrumMasterName === '' ? 'Scrum Master Name cannot be empty' : ''}
+                    error={isFilled && scrumMasterName === ''}
+                    helperText={isFilled && scrumMasterName === '' ? 'Scrum Master Name cannot be empty' : ''}
                 />
                 <TextField
+                    required
                     label="YYYY-MM-DD"
                     fullWidth
                     sx={{ m: 0.5 }}
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    error={isSubmitted && startDate === ''}
-                    helperText={isSubmitted && startDate === '' ? 'Start Date cannot be empty' : ''}
+                    error={isFilled && startDate === ''}
+                    helperText={isFilled && startDate === '' ? 'Start Date cannot be empty' : ''}
                 />
                 <InputLabel>Methodology</InputLabel>
                 <Select
+                    required
                     label="Methodology"
                     fullWidth
                     sx={{ m: 0.5 }}
                     value={methodology}
                     onChange={(e) => setMethodology(e.target.value)}
-                    error={isSubmitted && methodology === ''}
-                    helperText={isSubmitted && methodology === '' ? 'Methodology cannot be empty' : ''}
+                    error={isFilled && methodology === ''}
+                    helperText={isFilled && methodology === '' ? 'Methodology cannot be empty' : ''}
                 >
                     <MenuItem value="Agile">Agile</MenuItem>
                     <MenuItem value="Waterfall">Waterfall</MenuItem>
                 </Select>
-                
+
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
                 {
-                    selectedProduct ? (<Button onClick={handleUpdateProduct&&handleSubmit}>Update</Button>)
-                        : (<Button onClick={handleAddProduct&&handleSubmit}>Add</Button>)
+                    selectedProduct ? (<Button onClick={handleUpdateProduct}>Update</Button>)
+                        : (<Button onClick={handleAddProduct}>Add</Button>)
                 }
             </DialogActions>
         </Dialog>

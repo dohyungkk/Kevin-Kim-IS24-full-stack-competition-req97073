@@ -30,6 +30,7 @@ const ProductPage = () => {
             })
     }, []);
 
+    /* Printing out all stored data */
     useEffect(() => {
         const rows = productData.map((product) => (
             <TableRow key={product.productId}>
@@ -68,6 +69,7 @@ const ProductPage = () => {
         setProductRows(rows);
     }, [productData]);
 
+    /* Deleting selected data and updating remaining data */
     const deleteProduct = (product) => {
         axios.delete(`http://localhost:8000/products/${product.productId}`)
             .then(() => {
@@ -79,6 +81,7 @@ const ProductPage = () => {
             })
     }
 
+    /* Searching queries for scrumMasterName and developerName */
     const searchProducts = () => {
         let queries = {}
         if (queryScrumMasterName) {
@@ -87,7 +90,6 @@ const ProductPage = () => {
         if (queryDeveloperName) {
             queries.developerName = queryDeveloperName
         }
-
         axios.get("http://localhost:8000/products", { params: queries })
             .then((response) => {
                 setProductData(response.data);
@@ -96,14 +98,11 @@ const ProductPage = () => {
             })
     }
 
+    /* Adding Table when values are submitted */
     const handleAddProductData = (newProductData) => {
         setProductData([...productData, newProductData]);
     };
-
-    // const updatedProjects = [...productData]
-    // find index of matching record for efficiency
-    // updatedProjects[index] = updatedProduct
-    // setProductData(updatedProducts);
+    /* Updating Table when values are submitted */
     const handleUpdateProduct = (updatedProduct) => {
         const updatedProducts = productData.map((product) => {
             if (product.productId === updatedProduct.productId) {
@@ -124,6 +123,7 @@ const ProductPage = () => {
         setOpenAddProductDialog(false);
     };
 
+    /* Showing if data has been creaed, updated, or deleted  */
     const handleMessageFromDialog = (message) => {
         setMessageFromDialog(message);
     };
@@ -145,7 +145,6 @@ const ProductPage = () => {
                 <ProductDialog
                     open={openAddProductDialog}
                     handleClose={handleCloseProductDialog}
-                    /* Updates Table once values are submitted in Dialog */
                     handleAddProductData={handleAddProductData}
                     handleUpdateProductData={handleUpdateProduct}
                     handleMessageFromDialog={handleMessageFromDialog}
